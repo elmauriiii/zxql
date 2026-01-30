@@ -48,7 +48,7 @@ with open(filename, 'wb') as f:
 - **Extension**: `.sna`
 - **Size**: 49,179 bytes (fixed)
 - **Resolution**: 256×192 pixels
-- **Demo Decoder**: 3 bytes per pixel → (x, y, RGB 3:3:2)
+- **Decoder**: Proper ZX Spectrum 48K bitmap format with attributes
 
 ## GitHub Setup
 

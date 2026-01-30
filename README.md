@@ -9,7 +9,7 @@ macOS Quick Look extension for `.sna` files (ZX Spectrum 48K snapshots). Right-c
 - **Extension**: `.sna`
 - **Size**: 49,179 bytes (fixed)
 - **Resolution**: 256×192 pixels
-- **Demo Decoder**: Reads 3 bytes at a time as (x, y, RGB 3:3:2 color)
+- **Decoder**: Proper ZX Spectrum 48K bitmap format with attributes
 
 ### Challenges Overcome
 
