@@ -50,30 +50,21 @@ class PreviewViewController: NSViewController, QLPreviewingController {
     }
 
     func preparePreviewOfFile(at url: URL) async throws {
-        do {
-            let data = try Data(contentsOf: url)
-            
-            // Validate file size
-            guard data.count == 49179 else {
-                throw NSError(domain: "PreviewViewController", code: -1, 
-                             userInfo: [NSLocalizedDescriptionKey: "Invalid .sna file size: \(data.count) bytes"])
-            }
-            
-            // Create bitmap image
-            let image = decodeSnapshotData(data)
-            
-            DispatchQueue.main.async {
-                if let imageView = self.imageView {
-                    imageView.image = image
-                    imageView.imageScaling = .scaleProportionallyUpOrDown
-                }
-            }
-        } catch {
-            let errorImage = createErrorImage(with: "Error reading file: \(error.localizedDescription)")
-            DispatchQueue.main.async {
-                if let imageView = self.imageView {
-                    imageView.image = errorImage
-                }
+        let data = try Data(contentsOf: url)
+        
+        // Validate file size - silently reject invalid files
+        guard data.count == 49179 else {
+            throw NSError(domain: "PreviewViewController", code: -1, 
+                         userInfo: [NSLocalizedDescriptionKey: "Invalid .sna file size"])
+        }
+        
+        // Create bitmap image
+        let image = decodeSnapshotData(data)
+        
+        DispatchQueue.main.async {
+            if let imageView = self.imageView {
+                imageView.image = image
+                imageView.imageScaling = .scaleProportionallyUpOrDown
             }
         }
     }
@@ -154,32 +145,6 @@ class PreviewViewController: NSViewController, QLPreviewingController {
         
         let image = NSImage(size: bitmap.size)
         image.addRepresentation(bitmap)
-        return image
-    }
-
-
-    /// Create a simple error image with text
-    private func createErrorImage(with message: String) -> NSImage {
-        let image = NSImage(size: NSSize(width: 256, height: 192))
-        image.lockFocus()
-        
-        NSColor.black.setFill()
-        NSRect(x: 0, y: 0, width: 256, height: 192).fill()
-        
-        let style = NSMutableParagraphStyle()
-        style.alignment = .center
-        
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.monospacedSystemFont(ofSize: 10, weight: .regular),
-            .foregroundColor: NSColor.red,
-            .paragraphStyle: style
-        ]
-        
-        let text = NSAttributedString(string: message, attributes: attributes)
-        let rect = NSRect(x: 10, y: 80, width: 236, height: 32)
-        text.draw(in: rect)
-        
-        image.unlockFocus()
         return image
     }
 }

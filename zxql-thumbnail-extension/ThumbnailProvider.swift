@@ -24,7 +24,7 @@ class ThumbnailProvider: QLThumbnailProvider {
         do {
             let data = try Data(contentsOf: request.fileURL)
             guard data.count == 49179 else {
-                throw NSError(domain: "ThumbnailProvider", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid .sna file size"])
+                throw NSError(domain: "ThumbnailProvider", code: -1, userInfo: [NSLocalizedDescriptionKey: "Invalid .sna file"])
             }
             
             let width = 256
@@ -121,6 +121,7 @@ class ThumbnailProvider: QLThumbnailProvider {
             
             handler(reply, nil)
         } catch {
+            // Silently reject invalid files - macOS will use other handlers
             handler(nil, error)
         }
     }
